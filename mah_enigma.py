@@ -32,14 +32,49 @@ def main():
 				decode_message()
 
 def encode_message():
+	global uppercase_letters, lowercase_letters
+
 	message = input("Message: ")
 	key = input("Key: ")
+	key_length = len(key)
 
-	print(message)
-	print(key)
+	# Declares empty string
+	encrypted_text = "" 
+
+	for i in range(len(message)):
+		letter = message[i]
+		if letter.isalpha():
+			character_list = uppercase_letters if letter.isupper() else lowercase_letters
+			rotation = character_list.index(key[i % key_length])
+			encrypted_text += character_list[character_list.index(letter) + rotation]
+		else:
+			encrypted_text += letter
+
+	print(encrypted_text)
 
 def decode_message():
-	pass
+	global uppercase_letters, lowercase_letters
+
+	message = input("Message: ")
+	key = input("Key: ")
+	key_length = len(key)
+
+	# Declares empty string
+	decrypted_text = "" 
+
+	for i in range(len(message)):
+		letter = message[i]
+		if letter.isalpha():
+			character_list = uppercase_letters if letter.isupper() else lowercase_letters
+			rotation = character_list.index(key[i % key_length])
+			decrypted_text += character_list[character_list.index(letter) - rotation]
+		else:
+			decrypted_text += letter
+
+	print(decrypted_text)
+
+uppercase_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ"
+lowercase_letters = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 
 def clear_terminal(): os.system('cls' if os.name == 'nt' else 'clear')
 
