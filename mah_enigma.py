@@ -4,8 +4,8 @@ def main():
 	while True:
 		# Initial Menu
 		print("[0]. Quit Program")
-		print("[1]. Encode Message")
-		print("[2]. Decode Message")
+		print("[1]. Encrypt Message")
+		print("[2]. Decrypt Message")
 	
 		# Input Correction
 		# If the user's input would break the program, it changes the input such that it will not break the program.
@@ -27,51 +27,68 @@ def main():
 				print("Program Terminated")
 				exit()
 			case 1:
-				encode_message()
+				encrypt_decrypt_message(1)
 			case 2:
-				decode_message()
+				encrypt_decrypt_message(-1)
 
-def encode_message():
+def encrypt_decrypt_message(encrypt_or_decrypt):
 	global uppercase_letters, lowercase_letters
 
 	message = input("Message: ")
-	key = input("Key: ")
+
+	# Input validation for the Key
+	valid_key = False
+
+	while valid_key == False:
+		key = input("Key: ")
+		if len(key) == 0:
+			print("Please input a key.")
+			continue
+		elif len(remove_nonalpha(key)) == 0:
+			print("Your key must contain valid letters used in the English alphabet.")
+		else:
+			break
+
+	key = remove_nonalpha(key)
 	key_length = len(key)
 
 	# Declares empty string
-	encrypted_text = "" 
+	modified_text = "" 
 
+	# Encryption/Decryption of text
 	for i in range(len(message)):
 		letter = message[i]
 		if letter.isalpha():
 			character_list = uppercase_letters if letter.isupper() else lowercase_letters
-			rotation = character_list.index(key[i % key_length])
-			encrypted_text += character_list[character_list.index(letter) + rotation]
+
+			try:
+				rotation = uppercase_letters.index(key[i % key_length])
+			except ValueError:
+				rotation = lowercase_letters.index(key[i % key_length])
+
+			# Rotates text one way if encoding, rotates text opposite way if decoding
+			modified_text += character_list[character_list.index(letter) + rotation * encrypt_or_decrypt]
 		else:
-			encrypted_text += letter
+			modified_text += letter
 
-	print(encrypted_text)
+	# Prints encrypted/decrypted message
+	if encrypt_or_decrypt == 1:
+		print(f"Your encrypted message: {modified_text}")
+	else:
+		print(f"Your decrypted message: {modified_text}")
 
-def decode_message():
-	global uppercase_letters, lowercase_letters
-
-	message = input("Message: ")
-	key = input("Key: ")
-	key_length = len(key)
-
+def remove_nonalpha(text):
 	# Declares empty string
-	decrypted_text = "" 
+	new_text = ""
 
-	for i in range(len(message)):
-		letter = message[i]
-		if letter.isalpha():
-			character_list = uppercase_letters if letter.isupper() else lowercase_letters
-			rotation = character_list.index(key[i % key_length])
-			decrypted_text += character_list[character_list.index(letter) - rotation]
+	# Removes all non-alpha characters
+	for character in text:
+		if character.isalpha():
+			new_text += character
 		else:
-			decrypted_text += letter
+			continue
 
-	print(decrypted_text)
+	return new_text
 
 uppercase_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ"
 lowercase_letters = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
