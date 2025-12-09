@@ -34,12 +34,14 @@ def main():
 def encrypt_decrypt_message(cipher_direction):
 	global uppercase_letters, lowercase_letters
 
+	# File Validation
+	# If user's filename does not exist in the assets folder, return back to Initial Menu [main() function].
 	try:
 		file_name = input("Enter File Name: ")
 		with open(f"assets/{file_name}.txt", "r") as file:
 			message = file.read()
 	except FileNotFoundError:
-		print('File unable to be located. Make sure that your message is inside a .txt file and that the file is inside the "assets" folder.')
+		print('File unable to be located. Make sure that your message is inside a .txt file and that the file is inside the "assets" folder.\n')
 		return
 
 	# Input validation for the Key
@@ -55,13 +57,16 @@ def encrypt_decrypt_message(cipher_direction):
 		else:
 			break
 
-	key = remove_nonalpha(key)
 	key_length = len(key)
 
-	# Declares empty string
+	# Filters out special characters from the key
+	key = remove_nonalpha(key)
+
+	# Declares empty string. This string will store the encrypted/decrypted text.
 	modified_text = "" 
 
-	# Encryption/Decryption of text
+	# Encryption/Decryption of Text
+	# j is used so that the cipher can skip over special characters
 	j = -1
 	rotation_direction = 1 if cipher_direction == "encrypt" else -1
 	for i in range(len(message)):
@@ -76,7 +81,6 @@ def encrypt_decrypt_message(cipher_direction):
 				rotation = lowercase_letters.index(key[j % key_length])
 
 			# Rotates text one way if encoding, rotates text opposite way if decoding
-
 			modified_text += character_list[character_list.index(letter) + rotation * rotation_direction]
 		else:
 			modified_text += letter
@@ -113,19 +117,19 @@ def encrypt_decrypt_message(cipher_direction):
 			case 1:
 				with open(f"assets/{file_name}.txt", "w") as file:
 					file.write(modified_text)
-				print("File Overwritten.")
+				print("File Overwritten.\n")
 			case 2:
 				file_name = input("Enter name of New File: ")
 				with open(f"assets/{file_name}.txt", "w") as new_file:
 					new_file.write(modified_text)
-				print("New File Created.")
+				print("New File Created.\n")
 			case 3:
-				print("Nothing ever happens...")
+				print("Nothing ever happens...\n")
 
 		break
 
 def remove_nonalpha(text):
-	# Declares empty string
+	# Declares empty string. This string will store the filtered text.
 	new_text = ""
 
 	# Removes all non-alpha characters
