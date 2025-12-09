@@ -27,14 +27,20 @@ def main():
 				print("Program Terminated")
 				exit()
 			case 1:
-				encrypt_decrypt_message(1)
+				encrypt_decrypt_message("encrypt")
 			case 2:
-				encrypt_decrypt_message(-1)
+				encrypt_decrypt_message("decrypt")
 
-def encrypt_decrypt_message(encrypt_or_decrypt):
+def encrypt_decrypt_message(cipher_direction):
 	global uppercase_letters, lowercase_letters
 
-	message = input("Message: ")
+	try:
+		file_name = input("Enter File Name: ")
+		with open(f"assets/{file_name}.txt", "r") as file:
+			message = file.read()
+	except FileNotFoundError:
+		print('File unable to be located. Make sure that your message is inside a .txt file and that the file is inside the "assets" folder.')
+		return
 
 	# Input validation for the Key
 	valid_key = False
@@ -56,26 +62,67 @@ def encrypt_decrypt_message(encrypt_or_decrypt):
 	modified_text = "" 
 
 	# Encryption/Decryption of text
+	j = -1
+	rotation_direction = 1 if cipher_direction == "encrypt" else -1
 	for i in range(len(message)):
 		letter = message[i]
 		if letter.isalpha():
 			character_list = uppercase_letters if letter.isupper() else lowercase_letters
+			j += 1
 
 			try:
-				rotation = uppercase_letters.index(key[i % key_length])
+				rotation = uppercase_letters.index(key[j % key_length])
 			except ValueError:
-				rotation = lowercase_letters.index(key[i % key_length])
+				rotation = lowercase_letters.index(key[j % key_length])
 
 			# Rotates text one way if encoding, rotates text opposite way if decoding
-			modified_text += character_list[character_list.index(letter) + rotation * encrypt_or_decrypt]
+
+			modified_text += character_list[character_list.index(letter) + rotation * rotation_direction]
 		else:
 			modified_text += letter
 
-	# Prints encrypted/decrypted message
-	if encrypt_or_decrypt == 1:
-		print(f"Your encrypted message: {modified_text}")
-	else:
-		print(f"Your decrypted message: {modified_text}")
+	# Prints Modified and Unmodified Text
+	print(f"Original Text: {message}")
+	print(f"Your {cipher_direction}ed message: {modified_text}")
+
+	# END TEXT MODIFICATION
+	# START FILE HANDLING
+
+	while True:
+		# Save Menu
+		print(f"\nWhat would you like to do with your {cipher_direction}ed message?")
+		print("[1]. Overwrite Existing File")
+		print("[2]. Write to a New File")
+		print("[3]. Nothing")
+
+		# Input Correction
+		# If the user's input would break the program, it changes the input such that it will not break the program.
+		while True:
+			try:
+				selection = int(input("Select an Option: "))
+				print("")
+				break
+			except ValueError:
+				# On ValueError, the input variable is instead set to an integer not corresponding to anything on the menu, which will bring you back to the initial menu
+				selection = 9
+				break
+
+		clear_terminal()
+
+		match selection:
+			case 1:
+				with open(f"assets/{file_name}.txt", "w") as file:
+					file.write(modified_text)
+				print("File Overwritten.")
+			case 2:
+				file_name = input("Enter name of New File: ")
+				with open(f"assets/{file_name}.txt", "w") as new_file:
+					new_file.write(modified_text)
+				print("New File Created.")
+			case 3:
+				print("Nothing ever happens...")
+
+		break
 
 def remove_nonalpha(text):
 	# Declares empty string
