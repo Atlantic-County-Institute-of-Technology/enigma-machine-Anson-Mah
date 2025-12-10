@@ -41,7 +41,10 @@ def encrypt_decrypt_message(cipher_direction):
 		with open(f"assets/{file_name}.txt", "r") as file:
 			message = file.read()
 	except FileNotFoundError:
-		print('File unable to be located. Make sure that your message is inside a .txt file and that the file is inside the "assets" folder.\n')
+		print('File unable to be located. Make sure that you have done the following things:\n')
+		print('Put your message inside a .txt file.')
+		print('Put your file inside the "assets" folder.')
+		print('Input the file name without the ".txt" extension.\n')
 		return
 
 	# Input validation for the Key
