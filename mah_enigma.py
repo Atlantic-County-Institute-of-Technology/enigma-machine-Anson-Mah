@@ -59,8 +59,8 @@ def encrypt_decrypt_message(cipher_direction):
 
 	key_length = len(key)
 
-	# Filters out special characters from the key
-	key = remove_nonalpha(key)
+	# Filters out special characters from the key and makes it all lowercase
+	key = remove_nonalpha(key).lower()
 
 	# Declares empty string. This string will store the encrypted/decrypted text.
 	modified_text = "" 
@@ -74,11 +74,7 @@ def encrypt_decrypt_message(cipher_direction):
 		if letter.isalpha():
 			character_list = uppercase_letters if letter.isupper() else lowercase_letters
 			j += 1
-
-			try:
-				rotation = uppercase_letters.index(key[j % key_length])
-			except ValueError:
-				rotation = lowercase_letters.index(key[j % key_length])
+			rotation = lowercase_letters.index(key[j % key_length])
 
 			# Rotates text one way if encoding, rotates text opposite way if decoding
 			modified_text += character_list[character_list.index(letter) + rotation * rotation_direction]
@@ -113,6 +109,7 @@ def encrypt_decrypt_message(cipher_direction):
 
 		clear_terminal()
 
+		# Runs the code associated with user selection
 		match selection:
 			case 1:
 				with open(f"assets/{file_name}.txt", "w") as file:
