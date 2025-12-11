@@ -34,4 +34,3 @@ Please submit your file by pushing all changes to your assigned git repository. 
 | 3     | Response gives evidence of a reasonable approach but indicates gaps in conceptual understanding. Explanations are incomplete, vague, or muddled. |
 | 2     | Response gives some evidence of problem understanding but contains major programming or reasoning errors.                                        |
 | 1     | No response or response is completely incorrect or irrelevant.                                                                                   |
-
